@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#faf8f4">
+<title>PhysEvo - Anonymous Supplementary Videos</title>
+<meta name="description" content="Model execution, 16 simulation tasks, and 5 real-world tasks.">
+<style>
+:root{
+  --paper:#faf8f4; --surface:#f3ece4; --ink:#302b28; --muted:#70665e; --faint:#7c7067;
+  --rule:#e4d9ce; --accent:#ff9b3d; --accent-ink:#d16a16; --accent-soft:#fff3e4;
+  --serif:"Source Serif 4",Charter,Georgia,"Songti SC","Noto Serif CJK SC",serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  --reading:710px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:40px}
+body{margin:0;padding:0 40px;background:var(--paper);color:var(--ink);
+  font:19px/1.75 var(--serif);-webkit-font-smoothing:antialiased}
+::selection{background:#ffe6c5;color:#8b480d}
+[hidden]{display:none!important}
+button,a{ -webkit-tap-highlight-color:transparent }
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:4px}
+a:hover{color:#b65b0c}
+button{color:inherit;font-family:var(--sans);cursor:pointer}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--accent-ink);outline-offset:5px}
+p{margin:0 0 20px}
+strong{font-weight:600}
+.doc{max-width:1080px;margin:0 auto}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:25px 0;border-bottom:1px solid var(--rule);font:12px/1.5 var(--sans)}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);
+  font-weight:600;letter-spacing:-.025em;font-size:14px}
+.brand-divider{height:13px;width:1px;background:var(--rule);margin-left:7px}
+.brand-context{color:var(--faint);font-size:11px;font-weight:400;letter-spacing:0}
+.topbar nav{display:flex;gap:26px}
+.topbar nav a{text-decoration:none;color:var(--muted)}
+.topbar nav a:hover{color:var(--accent-ink)}
+
+.doc-header{text-align:center;padding:66px 0 0}
+.doc-eyebrow{display:flex;justify-content:center;gap:10px;align-items:center;color:var(--muted);
+  font:10px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:23px}
+.doc-eyebrow::before{content:"";width:5px;height:5px;background:var(--accent);border-radius:50%}
+.doc-title{margin:0;color:#191919;font:600 clamp(50px,6.8vw,84px)/1.04 var(--serif);
+  letter-spacing:-.055em;text-wrap:balance}
+.doc-subtitle{max-width:555px;margin:25px auto 24px;color:var(--muted);
+  font:15px/1.8 var(--sans);text-wrap:balance}
+.doc-meta{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 24px;
+  margin-top:25px;color:var(--muted);font:10px/1.7 var(--mono)}
+.doc-meta span{display:flex;align-items:center;gap:8px}
+.doc-meta span::before{content:"";width:4px;height:4px;background:#ffb86b;border-radius:50%}
+
+section{margin-bottom:84px}
+h2{position:relative;margin-top:0;margin-bottom:20px;font:400 34px/1.2 var(--serif);
+  letter-spacing:-.038em;text-wrap:balance}
+h2 .num{position:absolute;right:calc(100% + 22px);top:10px;font:10px/1.5 var(--mono);
+  letter-spacing:.02em;color:var(--accent-ink)}
+section>h2,section>p{max-width:var(--reading);margin-left:auto;margin-right:auto}
+section>p{color:#625850;font-size:18px;line-height:1.8}
+section:first-of-type{margin-top:60px}
+
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;border:0}
+.episode-library{margin-top:34px;border-top:1px solid var(--rule)}
+.episode-heading{display:flex;justify-content:space-between;align-items:center;gap:24px;
+  padding:26px 0 21px}
+.episode-eyebrow{font:9px/1.5 var(--mono);letter-spacing:.07em;color:var(--faint);margin-bottom:9px}
+.episode-eyebrow span{color:var(--accent-ink);padding:0 5px}
+.episode-heading h3{font-size:29px;margin:0}
+.episode-clips{display:flex;gap:4px;flex-shrink:0}
+.episode-clips button{width:62px;height:40px;border:1px solid transparent;background:transparent;
+  font:11px var(--mono);border-radius:3px;color:var(--muted);white-space:nowrap}
+.episode-clips button[aria-pressed="true"]{background:var(--accent-soft);border-color:#f8c78e;color:var(--accent-ink)}
+.episode-clips button:hover{background:var(--accent-soft)}
+.episode-stage{background:#f3ece4;padding:0}
+.episode-camera-labels{display:grid;grid-template-columns:repeat(3,1fr);padding:8px 0;
+  background:var(--surface);color:var(--muted);font:9px/1.5 var(--mono)}
+.episode-camera-labels span{padding-left:13px}
+.episode-camera-labels span+span{border-left:1px solid var(--rule)}
+.episode-stage video{display:block;width:100%;height:auto;aspect-ratio:4/1;object-fit:contain;
+  margin:0 auto;background:#f3ece4}
+.episode-stage[data-view="overview"] video{max-width:640px;aspect-ratio:4/3}
+.episode-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;
+  padding:13px 0 18px;border-bottom:1px solid var(--rule);font:10px/1.5 var(--sans)}
+.episode-views{display:flex;gap:18px}
+.episode-views button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 0 8px;
+  color:var(--muted);font:inherit}
+.episode-views button[aria-pressed="true"]{border-bottom-color:var(--accent);color:var(--accent-ink)}
+.episode-playback{display:flex;gap:20px;align-items:center}
+.episode-duration{font:10px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.episode-library select{color:var(--ink);font:inherit;border:0;border-radius:0;background:transparent;
+  cursor:pointer;padding:10px 0}
+.episode-playback a{color:var(--muted);text-decoration:none;padding:10px 0}
+.episode-playback a:hover{color:var(--accent-ink)}
+.episode-task-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px 14px;margin-top:20px}
+.episode-task{display:flex;align-items:baseline;gap:11px;text-align:left;min-height:52px;
+  padding:12px 9px;border:0;border-bottom:1px solid var(--rule);border-radius:0;background:transparent;
+  font:11px/1.65 var(--sans);color:var(--muted);transition:background .18s,color .18s}
+.episode-index{font:9px var(--mono);color:var(--faint)}
+.episode-task:hover,.episode-task[aria-pressed="true"]{color:var(--accent-ink);background:var(--accent-soft)}
+.episode-task[aria-pressed="true"]{border-bottom-color:var(--accent)}
+.episode-task[aria-pressed="true"] .episode-index{color:var(--accent-ink)}
+.episode-mobile-select{display:none}
+.episode-error{font:12px/1.7 var(--sans);color:var(--accent-ink);margin:14px 0}
+
+.real-demo{margin-top:46px}.real-demo .episode-stage video{aspect-ratio:15/4}
+.real-demo .episode-toolbar{justify-content:flex-end}
+.real-demo .episode-task-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+.featured .episode-stage video{aspect-ratio:16/9}
+.featured-heading{align-items:center;padding:22px 0 18px}
+.featured-heading .episode-eyebrow{margin-bottom:0}
+.featured-download{font:11px var(--mono);color:var(--accent-ink);text-decoration:none;
+  border:1px solid #f8c78e;border-radius:3px;padding:9px 13px;background:var(--accent-soft);flex-shrink:0}
+.featured-download:hover{background:#ffe9d2}
+.featured .episode-toolbar{justify-content:flex-end}
+
+.footer-end{display:flex;justify-content:space-between;gap:20px;margin-top:28px;padding-top:19px;
+  border-top:1px solid var(--rule);font:9px/1.5 var(--mono);letter-spacing:.04em;color:var(--muted)}
+.footer-end a{text-decoration:none}
+
+@media (max-width:1000px){
+  body{padding:0 30px}
+  h2 .num{position:static;display:block;margin-bottom:10px}
+}
+@media (max-width:760px){
+  body{padding:0 24px;font-size:17px}
+  .brand-context,.brand-divider{display:none}
+  .topbar{padding:21px 0}
+  .topbar nav{gap:18px}
+  .doc-header{padding-top:46px}
+  .doc-title{font-size:clamp(48px,7.6vw,60px)}
+  .doc-subtitle{max-width:480px;font-size:14px}
+  h2{font-size:31px}
+  section{margin-bottom:62px}
+  .episode-heading{align-items:flex-start;flex-direction:column;gap:14px}
+  .episode-heading h3{font-size:26px}
+  .episode-mobile-select{display:flex;align-items:center;gap:18px;border-top:1px solid var(--rule);
+    font:12px var(--sans);color:var(--muted);padding:4px 0 12px}
+  .episode-mobile-select select{min-width:0;flex:1}
+  .episode-task-grid{display:none}
+  .episode-playback{gap:14px}
+}
+@media (max-width:520px){
+  body{padding:0 20px}
+  .brand{font-size:12px;gap:7px}
+  .topbar{gap:12px;font-size:11px;padding:17px 0}
+  .topbar nav{gap:14px}
+  .topbar .nav-secondary{display:none}
+  .doc-header{padding-top:39px}
+  .doc-eyebrow{font-size:8px;letter-spacing:.08em;margin-bottom:18px}
+  .doc-title{font-size:clamp(38px,10.5vw,50px);line-height:1.08;letter-spacing:-.05em}
+  .doc-subtitle{font-size:13px;margin:22px auto;max-width:310px}
+  .doc-meta{gap:5px 16px;font-size:9px;margin-top:19px}
+  h2{font-size:29px}
+  section>p{font-size:17px}
+  .episode-clips{gap:2px}
+  .episode-clips button{width:52px;font-size:10px}
+  .episode-toolbar{flex-wrap:wrap;gap:0 20px;padding-bottom:10px}
+  .episode-playback{margin-left:auto}
+  .episode-camera-labels{font-size:7px}
+  .episode-camera-labels span{padding-left:5px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+<body id="top">
+<article class="doc">
+
+  <div class="topbar">
+    <a class="brand" href="#top">PhysEvo <span class="brand-divider"></span><span class="brand-context">Recordings</span></a>
+    <nav aria-label="Main navigation"><a href="#featured">Feature</a><a href="#sim">Simulation</a><a href="#real" class="nav-secondary">Real robot</a></nav>
+  </div>
+
+  <header class="doc-header">
+    <div class="doc-eyebrow">Robot manipulation &middot; Recordings</div>
+    <h1 class="doc-title">PhysEvo - Anonymous Supplementary Videos</h1>
+    <p class="doc-subtitle">Model-controlled manipulation in simulation and on hardware.</p>
+    <div class="doc-meta"><span>16 simulation tasks</span><span>80 clips</span><span>5 real-world tasks</span></div>
+  </header>
+
+  <section id="featured">
+    <h2><span class="num">01</span>Model input and output</h2>
+    <p>Observations &rarr; actions &rarr; execution feedback.</p>
+    <div class="episode-library featured" id="featured-library">
+      <div class="episode-heading featured-heading">
+        <div class="episode-eyebrow">FEATURED <span>&middot;</span> CONTINUOUS RECORDING <span>&middot;</span> 1:14</div>
+        <a class="featured-download" href="anonymous_model_io_continuous_light_v4.mp4" download>Download <span aria-hidden="true">&darr;</span></a>
+      </div>
+      <div class="episode-stage featured-stage">
+        <video id="featured-video" controls playsinline preload="metadata" width="1920" height="1080"
+          poster="anonymous_model_io_continuous_light_v4.jpg" src="anonymous_model_io_continuous_light_v4.mp4"
+          aria-label="Annotated model input and output recording"></video>
+      </div>
+      <div class="episode-toolbar">
+        <div class="episode-playback">
+          <a href="anonymous_model_io_continuous_light_v4.mp4" target="_blank" rel="noopener">Open clip <span aria-hidden="true">&nearr;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sim">
+    <h2><span class="num">02</span>Simulation</h2>
+    <p>Five clips per task.</p>
+    <div class="episode-library" id="episode-library" data-media-root="media/">
+      <div class="episode-heading">
+        <div>
+          <div class="episode-eyebrow">SIMULATION <span>&middot;</span> 16 TASKS</div>
+          <h3 id="episode-title">Arrange the largest number</h3>
+        </div>
+        <div class="episode-clips" role="group" aria-label="Choose a clip"><button type="button" data-video-clip="clip-01" aria-pressed="true" aria-controls="episode-video" aria-label="Clip 01">Clip 01</button><button type="button" data-video-clip="clip-02" aria-pressed="false" aria-controls="episode-video" aria-label="Clip 02">Clip 02</button><button type="button" data-video-clip="clip-03" aria-pressed="false" aria-controls="episode-video" aria-label="Clip 03">Clip 03</button><button type="button" data-video-clip="clip-04" aria-pressed="false" aria-controls="episode-video" aria-label="Clip 04">Clip 04</button><button type="button" data-video-clip="clip-05" aria-pressed="false" aria-controls="episode-video" aria-label="Clip 05">Clip 05</button></div>
+      </div>
+      <label class="episode-mobile-select">Task <select id="episode-select" aria-controls="episode-video"><option value="arrange_largest_number" selected>Arrange the largest number</option><option value="build_tower">Build tower</option><option value="classify_objects">Classify objects</option><option value="classify_objects_by_language">Classify by language</option><option value="fill_pen_holder">Fill pen holder</option><option value="fold_clothes">Fold clothes</option><option value="imitate_sorting_sequence">Imitate sorting sequence</option><option value="insert_tubes">Insert tubes</option><option value="make_kong">Make Kong</option><option value="organize_table">Organize table</option><option value="pack_objects_into_box">Pack objects into box</option><option value="play_tic_tac_toe">Play tic-tac-toe</option><option value="pour_balls_into_vase">Pour balls into a vase</option><option value="pour_liquid_into_cup">Pour liquid into a cup</option><option value="put_bottles_into_dustbin">Put bottles in the dustbin</option><option value="store_laptop_and_headphones">Store laptop &amp; headphones</option></select></label>
+      <div class="episode-stage" id="episode-stage" data-view="all">
+        <div class="episode-camera-labels" id="episode-camera-labels" aria-hidden="true"><span>Overview</span><span>Wrist camera 1</span><span>Wrist camera 2</span></div>
+        <video id="episode-video" controls playsinline preload="none" width="1920" height="480"
+          poster="media/videos/arrange_largest_number/clip-01-all.jpg" src="media/videos/arrange_largest_number/clip-01-all.mp4"
+          aria-label="Arrange the largest number, Clip 01"></video>
+      </div>
+      <div class="episode-toolbar">
+        <div class="episode-views" role="group" aria-label="Camera view">
+          <button type="button" data-video-view="all" aria-pressed="true" aria-controls="episode-video">All cameras</button>
+          <button type="button" data-video-view="overview" aria-pressed="false" aria-controls="episode-video">Overview</button>
+        </div>
+        <div class="episode-playback">
+          <span class="episode-duration" id="episode-duration">0:22</span>
+          <label class="episode-speed-label"><span class="visually-hidden">Playback speed</span><select id="episode-speed" aria-label="Playback speed"><option value="1">1&times; speed</option><option value="2">2&times; speed</option><option value="4">4&times; speed</option></select></label>
+          <a id="episode-open" href="media/videos/arrange_largest_number/clip-01-all.mp4" target="_blank" rel="noopener">Open clip <span aria-hidden="true">&nearr;</span></a>
+        </div>
+      </div>
+      <p class="episode-error" id="episode-error" role="alert" hidden>This recording could not be loaded. Use &ldquo;Open clip&rdquo; to check the video file.</p>
+      <p class="visually-hidden" id="episode-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="episode-task-grid" role="group" aria-label="Choose a task"><button type="button" class="episode-task" data-video-task="arrange_largest_number" aria-pressed="true" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">01</span><span>Arrange the largest number</span></button><button type="button" class="episode-task" data-video-task="build_tower" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">02</span><span>Build tower</span></button><button type="button" class="episode-task" data-video-task="classify_objects" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">03</span><span>Classify objects</span></button><button type="button" class="episode-task" data-video-task="classify_objects_by_language" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">04</span><span>Classify by language</span></button><button type="button" class="episode-task" data-video-task="fill_pen_holder" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">05</span><span>Fill pen holder</span></button><button type="button" class="episode-task" data-video-task="fold_clothes" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">06</span><span>Fold clothes</span></button><button type="button" class="episode-task" data-video-task="imitate_sorting_sequence" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">07</span><span>Imitate sorting sequence</span></button><button type="button" class="episode-task" data-video-task="insert_tubes" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">08</span><span>Insert tubes</span></button><button type="button" class="episode-task" data-video-task="make_kong" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">09</span><span>Make Kong</span></button><button type="button" class="episode-task" data-video-task="organize_table" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">10</span><span>Organize table</span></button><button type="button" class="episode-task" data-video-task="pack_objects_into_box" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">11</span><span>Pack objects into box</span></button><button type="button" class="episode-task" data-video-task="play_tic_tac_toe" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">12</span><span>Play tic-tac-toe</span></button><button type="button" class="episode-task" data-video-task="pour_balls_into_vase" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">13</span><span>Pour balls into a vase</span></button><button type="button" class="episode-task" data-video-task="pour_liquid_into_cup" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">14</span><span>Pour liquid into a cup</span></button><button type="button" class="episode-task" data-video-task="put_bottles_into_dustbin" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">15</span><span>Put bottles in the dustbin</span></button><button type="button" class="episode-task" data-video-task="store_laptop_and_headphones" aria-pressed="false" aria-controls="episode-video"><span class="episode-index" aria-hidden="true">16</span><span>Store laptop &amp; headphones</span></button></div>
+    </div>
+  </section>
+
+  <section id="real">
+    <h2><span class="num">03</span>Real robot</h2>
+    <p>Model-controlled executions on AgileX PiPER.</p>
+    <div class="episode-library real-demo" id="real-demo-library" data-media-root="media/">
+      <div class="episode-heading">
+        <div>
+          <div class="episode-eyebrow">REAL ROBOT <span>&middot;</span> 5 TASKS</div>
+          <h3 id="real-demo-title">Pour water</h3>
+        </div>
+      </div>
+      <label class="episode-mobile-select">Demonstration <select id="real-demo-select" aria-controls="real-demo-video"><option value="倒水2" selected>Pour water</option><option value="写字">Write</option><option value="叠方块">Stack blocks</option><option value="叠碗">Stack bowls</option><option value="放笔">Place pen</option></select></label>
+      <div class="episode-stage" id="real-demo-stage">
+        <video id="real-demo-video" controls playsinline preload="none" width="1920" height="512"
+          poster="media/real_demo/倒水2.jpg" src="media/real_demo/倒水2.mp4"
+          aria-label="Pour water, real-robot demonstration"></video>
+      </div>
+      <div class="episode-toolbar">
+        <div class="episode-playback">
+          <span class="episode-duration" id="real-demo-duration">0:13</span>
+          <label class="episode-speed-label"><span class="visually-hidden">Playback speed</span><select id="real-demo-speed" aria-label="Playback speed"><option value="1">1&times; speed</option><option value="2">2&times; speed</option><option value="4">4&times; speed</option></select></label>
+          <a id="real-demo-open" href="media/real_demo/倒水2.mp4" target="_blank" rel="noopener">Open clip <span aria-hidden="true">&nearr;</span></a>
+        </div>
+      </div>
+      <p class="episode-error" id="real-demo-error" role="alert" hidden>This recording could not be loaded. Use &ldquo;Open clip&rdquo; to check the video file.</p>
+      <p class="visually-hidden" id="real-demo-status" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="episode-task-grid" role="group" aria-label="Choose a demonstration"><button type="button" class="episode-task" data-real-demo="倒水2" aria-pressed="true" aria-controls="real-demo-video"><span class="episode-index" aria-hidden="true">01</span><span>Pour water</span></button><button type="button" class="episode-task" data-real-demo="写字" aria-pressed="false" aria-controls="real-demo-video"><span class="episode-index" aria-hidden="true">02</span><span>Write</span></button><button type="button" class="episode-task" data-real-demo="叠方块" aria-pressed="false" aria-controls="real-demo-video"><span class="episode-index" aria-hidden="true">03</span><span>Stack blocks</span></button><button type="button" class="episode-task" data-real-demo="叠碗" aria-pressed="false" aria-controls="real-demo-video"><span class="episode-index" aria-hidden="true">04</span><span>Stack bowls</span></button><button type="button" class="episode-task" data-real-demo="放笔" aria-pressed="false" aria-controls="real-demo-video"><span class="episode-index" aria-hidden="true">05</span><span>Place pen</span></button></div>
+    </div>
+  </section>
+
+  <div class="footer-end">
+    <span>80 simulation clips · 5 hardware demonstrations · 1 annotated I/O replay</span>
+    <a href="#top">Back to top &uarr;</a>
+  </div>
+
+</article>
+
+<script type="application/json" id="video-data">[{"id": "arrange_largest_number", "name": "Arrange the largest number", "clips": {"clip-01": {"duration": 21.866667, "views": {"all": {"file": "videos/arrange_largest_number/clip-01-all.mp4", "poster": "videos/arrange_largest_number/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/arrange_largest_number/clip-01-overview.mp4", "poster": "videos/arrange_largest_number/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 9.866667, "views": {"all": {"file": "videos/arrange_largest_number/clip-02-all.mp4", "poster": "videos/arrange_largest_number/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/arrange_largest_number/clip-02-overview.mp4", "poster": "videos/arrange_largest_number/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 25.566667, "views": {"all": {"file": "videos/arrange_largest_number/clip-03-all.mp4", "poster": "videos/arrange_largest_number/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/arrange_largest_number/clip-03-overview.mp4", "poster": "videos/arrange_largest_number/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 15.033333, "views": {"all": {"file": "videos/arrange_largest_number/clip-04-all.mp4", "poster": "videos/arrange_largest_number/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/arrange_largest_number/clip-04-overview.mp4", "poster": "videos/arrange_largest_number/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 7.4, "views": {"all": {"file": "videos/arrange_largest_number/clip-05-all.mp4", "poster": "videos/arrange_largest_number/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/arrange_largest_number/clip-05-overview.mp4", "poster": "videos/arrange_largest_number/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "build_tower", "name": "Build tower", "clips": {"clip-01": {"duration": 35.033333, "views": {"all": {"file": "videos/build_tower/clip-01-all.mp4", "poster": "videos/build_tower/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/build_tower/clip-01-overview.mp4", "poster": "videos/build_tower/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 27.1, "views": {"all": {"file": "videos/build_tower/clip-02-all.mp4", "poster": "videos/build_tower/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/build_tower/clip-02-overview.mp4", "poster": "videos/build_tower/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 35.033333, "views": {"all": {"file": "videos/build_tower/clip-03-all.mp4", "poster": "videos/build_tower/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/build_tower/clip-03-overview.mp4", "poster": "videos/build_tower/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 32.7, "views": {"all": {"file": "videos/build_tower/clip-04-all.mp4", "poster": "videos/build_tower/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/build_tower/clip-04-overview.mp4", "poster": "videos/build_tower/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 15.7, "views": {"all": {"file": "videos/build_tower/clip-05-all.mp4", "poster": "videos/build_tower/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/build_tower/clip-05-overview.mp4", "poster": "videos/build_tower/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "classify_objects", "name": "Classify objects", "clips": {"clip-01": {"duration": 20.866667, "views": {"all": {"file": "videos/classify_objects/clip-01-all.mp4", "poster": "videos/classify_objects/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects/clip-01-overview.mp4", "poster": "videos/classify_objects/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 27.1, "views": {"all": {"file": "videos/classify_objects/clip-02-all.mp4", "poster": "videos/classify_objects/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects/clip-02-overview.mp4", "poster": "videos/classify_objects/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 18.433333, "views": {"all": {"file": "videos/classify_objects/clip-03-all.mp4", "poster": "videos/classify_objects/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects/clip-03-overview.mp4", "poster": "videos/classify_objects/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 16.866667, "views": {"all": {"file": "videos/classify_objects/clip-04-all.mp4", "poster": "videos/classify_objects/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects/clip-04-overview.mp4", "poster": "videos/classify_objects/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 24.7, "views": {"all": {"file": "videos/classify_objects/clip-05-all.mp4", "poster": "videos/classify_objects/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects/clip-05-overview.mp4", "poster": "videos/classify_objects/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "classify_objects_by_language", "name": "Classify by language", "clips": {"clip-01": {"duration": 16.966667, "views": {"all": {"file": "videos/classify_objects_by_language/clip-01-all.mp4", "poster": "videos/classify_objects_by_language/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects_by_language/clip-01-overview.mp4", "poster": "videos/classify_objects_by_language/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 35.333008, "views": {"all": {"file": "videos/classify_objects_by_language/clip-02-all.mp4", "poster": "videos/classify_objects_by_language/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects_by_language/clip-02-overview.mp4", "poster": "videos/classify_objects_by_language/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 26.866667, "views": {"all": {"file": "videos/classify_objects_by_language/clip-03-all.mp4", "poster": "videos/classify_objects_by_language/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects_by_language/clip-03-overview.mp4", "poster": "videos/classify_objects_by_language/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 31.3, "views": {"all": {"file": "videos/classify_objects_by_language/clip-04-all.mp4", "poster": "videos/classify_objects_by_language/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects_by_language/clip-04-overview.mp4", "poster": "videos/classify_objects_by_language/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 31.933008, "views": {"all": {"file": "videos/classify_objects_by_language/clip-05-all.mp4", "poster": "videos/classify_objects_by_language/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/classify_objects_by_language/clip-05-overview.mp4", "poster": "videos/classify_objects_by_language/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "fill_pen_holder", "name": "Fill pen holder", "clips": {"clip-01": {"duration": 18.666016, "views": {"all": {"file": "videos/fill_pen_holder/clip-01-all.mp4", "poster": "videos/fill_pen_holder/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fill_pen_holder/clip-01-overview.mp4", "poster": "videos/fill_pen_holder/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 36.7, "views": {"all": {"file": "videos/fill_pen_holder/clip-02-all.mp4", "poster": "videos/fill_pen_holder/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fill_pen_holder/clip-02-overview.mp4", "poster": "videos/fill_pen_holder/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 36.566016, "views": {"all": {"file": "videos/fill_pen_holder/clip-03-all.mp4", "poster": "videos/fill_pen_holder/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fill_pen_holder/clip-03-overview.mp4", "poster": "videos/fill_pen_holder/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 18.966667, "views": {"all": {"file": "videos/fill_pen_holder/clip-04-all.mp4", "poster": "videos/fill_pen_holder/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fill_pen_holder/clip-04-overview.mp4", "poster": "videos/fill_pen_holder/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 35.066016, "views": {"all": {"file": "videos/fill_pen_holder/clip-05-all.mp4", "poster": "videos/fill_pen_holder/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fill_pen_holder/clip-05-overview.mp4", "poster": "videos/fill_pen_holder/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "fold_clothes", "name": "Fold clothes", "clips": {"clip-01": {"duration": 12.966667, "views": {"all": {"file": "videos/fold_clothes/clip-01-all.mp4", "poster": "videos/fold_clothes/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fold_clothes/clip-01-overview.mp4", "poster": "videos/fold_clothes/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 14.566667, "views": {"all": {"file": "videos/fold_clothes/clip-02-all.mp4", "poster": "videos/fold_clothes/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fold_clothes/clip-02-overview.mp4", "poster": "videos/fold_clothes/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 16.133333, "views": {"all": {"file": "videos/fold_clothes/clip-03-all.mp4", "poster": "videos/fold_clothes/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fold_clothes/clip-03-overview.mp4", "poster": "videos/fold_clothes/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 10.333333, "views": {"all": {"file": "videos/fold_clothes/clip-04-all.mp4", "poster": "videos/fold_clothes/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fold_clothes/clip-04-overview.mp4", "poster": "videos/fold_clothes/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 10.533333, "views": {"all": {"file": "videos/fold_clothes/clip-05-all.mp4", "poster": "videos/fold_clothes/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/fold_clothes/clip-05-overview.mp4", "poster": "videos/fold_clothes/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "imitate_sorting_sequence", "name": "Imitate sorting sequence", "clips": {"clip-01": {"duration": 43.866016, "views": {"all": {"file": "videos/imitate_sorting_sequence/clip-01-all.mp4", "poster": "videos/imitate_sorting_sequence/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/imitate_sorting_sequence/clip-01-overview.mp4", "poster": "videos/imitate_sorting_sequence/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 41.533008, "views": {"all": {"file": "videos/imitate_sorting_sequence/clip-02-all.mp4", "poster": "videos/imitate_sorting_sequence/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/imitate_sorting_sequence/clip-02-overview.mp4", "poster": "videos/imitate_sorting_sequence/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 53.366016, "views": {"all": {"file": "videos/imitate_sorting_sequence/clip-03-all.mp4", "poster": "videos/imitate_sorting_sequence/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/imitate_sorting_sequence/clip-03-overview.mp4", "poster": "videos/imitate_sorting_sequence/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 46.766016, "views": {"all": {"file": "videos/imitate_sorting_sequence/clip-04-all.mp4", "poster": "videos/imitate_sorting_sequence/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/imitate_sorting_sequence/clip-04-overview.mp4", "poster": "videos/imitate_sorting_sequence/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 44.8, "views": {"all": {"file": "videos/imitate_sorting_sequence/clip-05-all.mp4", "poster": "videos/imitate_sorting_sequence/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/imitate_sorting_sequence/clip-05-overview.mp4", "poster": "videos/imitate_sorting_sequence/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "insert_tubes", "name": "Insert tubes", "clips": {"clip-01": {"duration": 13.266016, "views": {"all": {"file": "videos/insert_tubes/clip-01-all.mp4", "poster": "videos/insert_tubes/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/insert_tubes/clip-01-overview.mp4", "poster": "videos/insert_tubes/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 13.066016, "views": {"all": {"file": "videos/insert_tubes/clip-02-all.mp4", "poster": "videos/insert_tubes/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/insert_tubes/clip-02-overview.mp4", "poster": "videos/insert_tubes/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 16.033333, "views": {"all": {"file": "videos/insert_tubes/clip-03-all.mp4", "poster": "videos/insert_tubes/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/insert_tubes/clip-03-overview.mp4", "poster": "videos/insert_tubes/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 15.366667, "views": {"all": {"file": "videos/insert_tubes/clip-04-all.mp4", "poster": "videos/insert_tubes/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/insert_tubes/clip-04-overview.mp4", "poster": "videos/insert_tubes/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 16.5, "views": {"all": {"file": "videos/insert_tubes/clip-05-all.mp4", "poster": "videos/insert_tubes/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/insert_tubes/clip-05-overview.mp4", "poster": "videos/insert_tubes/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "make_kong", "name": "Make Kong", "clips": {"clip-01": {"duration": 15.7, "views": {"all": {"file": "videos/make_kong/clip-01-all.mp4", "poster": "videos/make_kong/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/make_kong/clip-01-overview.mp4", "poster": "videos/make_kong/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 15.166016, "views": {"all": {"file": "videos/make_kong/clip-02-all.mp4", "poster": "videos/make_kong/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/make_kong/clip-02-overview.mp4", "poster": "videos/make_kong/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 20.033008, "views": {"all": {"file": "videos/make_kong/clip-03-all.mp4", "poster": "videos/make_kong/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/make_kong/clip-03-overview.mp4", "poster": "videos/make_kong/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 14.233008, "views": {"all": {"file": "videos/make_kong/clip-04-all.mp4", "poster": "videos/make_kong/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/make_kong/clip-04-overview.mp4", "poster": "videos/make_kong/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 18.333008, "views": {"all": {"file": "videos/make_kong/clip-05-all.mp4", "poster": "videos/make_kong/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/make_kong/clip-05-overview.mp4", "poster": "videos/make_kong/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "organize_table", "name": "Organize table", "clips": {"clip-01": {"duration": 33.1, "views": {"all": {"file": "videos/organize_table/clip-01-all.mp4", "poster": "videos/organize_table/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/organize_table/clip-01-overview.mp4", "poster": "videos/organize_table/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 32.5, "views": {"all": {"file": "videos/organize_table/clip-02-all.mp4", "poster": "videos/organize_table/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/organize_table/clip-02-overview.mp4", "poster": "videos/organize_table/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 33.166667, "views": {"all": {"file": "videos/organize_table/clip-03-all.mp4", "poster": "videos/organize_table/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/organize_table/clip-03-overview.mp4", "poster": "videos/organize_table/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 19.766016, "views": {"all": {"file": "videos/organize_table/clip-04-all.mp4", "poster": "videos/organize_table/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/organize_table/clip-04-overview.mp4", "poster": "videos/organize_table/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 32.566016, "views": {"all": {"file": "videos/organize_table/clip-05-all.mp4", "poster": "videos/organize_table/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/organize_table/clip-05-overview.mp4", "poster": "videos/organize_table/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "pack_objects_into_box", "name": "Pack objects into box", "clips": {"clip-01": {"duration": 27.166016, "views": {"all": {"file": "videos/pack_objects_into_box/clip-01-all.mp4", "poster": "videos/pack_objects_into_box/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pack_objects_into_box/clip-01-overview.mp4", "poster": "videos/pack_objects_into_box/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 43.366667, "views": {"all": {"file": "videos/pack_objects_into_box/clip-02-all.mp4", "poster": "videos/pack_objects_into_box/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pack_objects_into_box/clip-02-overview.mp4", "poster": "videos/pack_objects_into_box/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 41.4, "views": {"all": {"file": "videos/pack_objects_into_box/clip-03-all.mp4", "poster": "videos/pack_objects_into_box/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pack_objects_into_box/clip-03-overview.mp4", "poster": "videos/pack_objects_into_box/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 43.233008, "views": {"all": {"file": "videos/pack_objects_into_box/clip-04-all.mp4", "poster": "videos/pack_objects_into_box/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pack_objects_into_box/clip-04-overview.mp4", "poster": "videos/pack_objects_into_box/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 42.233333, "views": {"all": {"file": "videos/pack_objects_into_box/clip-05-all.mp4", "poster": "videos/pack_objects_into_box/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pack_objects_into_box/clip-05-overview.mp4", "poster": "videos/pack_objects_into_box/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "play_tic_tac_toe", "name": "Play tic-tac-toe", "clips": {"clip-01": {"duration": 29.833333, "views": {"all": {"file": "videos/play_tic_tac_toe/clip-01-all.mp4", "poster": "videos/play_tic_tac_toe/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/play_tic_tac_toe/clip-01-overview.mp4", "poster": "videos/play_tic_tac_toe/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 31.0, "views": {"all": {"file": "videos/play_tic_tac_toe/clip-02-all.mp4", "poster": "videos/play_tic_tac_toe/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/play_tic_tac_toe/clip-02-overview.mp4", "poster": "videos/play_tic_tac_toe/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 34.566667, "views": {"all": {"file": "videos/play_tic_tac_toe/clip-03-all.mp4", "poster": "videos/play_tic_tac_toe/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/play_tic_tac_toe/clip-03-overview.mp4", "poster": "videos/play_tic_tac_toe/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 31.733333, "views": {"all": {"file": "videos/play_tic_tac_toe/clip-04-all.mp4", "poster": "videos/play_tic_tac_toe/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/play_tic_tac_toe/clip-04-overview.mp4", "poster": "videos/play_tic_tac_toe/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 32.666667, "views": {"all": {"file": "videos/play_tic_tac_toe/clip-05-all.mp4", "poster": "videos/play_tic_tac_toe/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/play_tic_tac_toe/clip-05-overview.mp4", "poster": "videos/play_tic_tac_toe/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "pour_balls_into_vase", "name": "Pour balls into a vase", "clips": {"clip-01": {"duration": 6.666016, "views": {"all": {"file": "videos/pour_balls_into_vase/clip-01-all.mp4", "poster": "videos/pour_balls_into_vase/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_balls_into_vase/clip-01-overview.mp4", "poster": "videos/pour_balls_into_vase/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 6.066016, "views": {"all": {"file": "videos/pour_balls_into_vase/clip-02-all.mp4", "poster": "videos/pour_balls_into_vase/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_balls_into_vase/clip-02-overview.mp4", "poster": "videos/pour_balls_into_vase/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 19.6, "views": {"all": {"file": "videos/pour_balls_into_vase/clip-03-all.mp4", "poster": "videos/pour_balls_into_vase/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_balls_into_vase/clip-03-overview.mp4", "poster": "videos/pour_balls_into_vase/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 5.333008, "views": {"all": {"file": "videos/pour_balls_into_vase/clip-04-all.mp4", "poster": "videos/pour_balls_into_vase/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_balls_into_vase/clip-04-overview.mp4", "poster": "videos/pour_balls_into_vase/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 12.4, "views": {"all": {"file": "videos/pour_balls_into_vase/clip-05-all.mp4", "poster": "videos/pour_balls_into_vase/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_balls_into_vase/clip-05-overview.mp4", "poster": "videos/pour_balls_into_vase/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "pour_liquid_into_cup", "name": "Pour liquid into a cup", "clips": {"clip-01": {"duration": 11.733008, "views": {"all": {"file": "videos/pour_liquid_into_cup/clip-01-all.mp4", "poster": "videos/pour_liquid_into_cup/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_liquid_into_cup/clip-01-overview.mp4", "poster": "videos/pour_liquid_into_cup/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 13.366016, "views": {"all": {"file": "videos/pour_liquid_into_cup/clip-02-all.mp4", "poster": "videos/pour_liquid_into_cup/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_liquid_into_cup/clip-02-overview.mp4", "poster": "videos/pour_liquid_into_cup/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 13.366016, "views": {"all": {"file": "videos/pour_liquid_into_cup/clip-03-all.mp4", "poster": "videos/pour_liquid_into_cup/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_liquid_into_cup/clip-03-overview.mp4", "poster": "videos/pour_liquid_into_cup/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 12.033333, "views": {"all": {"file": "videos/pour_liquid_into_cup/clip-04-all.mp4", "poster": "videos/pour_liquid_into_cup/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_liquid_into_cup/clip-04-overview.mp4", "poster": "videos/pour_liquid_into_cup/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 13.166016, "views": {"all": {"file": "videos/pour_liquid_into_cup/clip-05-all.mp4", "poster": "videos/pour_liquid_into_cup/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/pour_liquid_into_cup/clip-05-overview.mp4", "poster": "videos/pour_liquid_into_cup/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "put_bottles_into_dustbin", "name": "Put bottles in the dustbin", "clips": {"clip-01": {"duration": 20.933008, "views": {"all": {"file": "videos/put_bottles_into_dustbin/clip-01-all.mp4", "poster": "videos/put_bottles_into_dustbin/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/put_bottles_into_dustbin/clip-01-overview.mp4", "poster": "videos/put_bottles_into_dustbin/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 16.466667, "views": {"all": {"file": "videos/put_bottles_into_dustbin/clip-02-all.mp4", "poster": "videos/put_bottles_into_dustbin/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/put_bottles_into_dustbin/clip-02-overview.mp4", "poster": "videos/put_bottles_into_dustbin/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 13.866667, "views": {"all": {"file": "videos/put_bottles_into_dustbin/clip-03-all.mp4", "poster": "videos/put_bottles_into_dustbin/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/put_bottles_into_dustbin/clip-03-overview.mp4", "poster": "videos/put_bottles_into_dustbin/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 16.2, "views": {"all": {"file": "videos/put_bottles_into_dustbin/clip-04-all.mp4", "poster": "videos/put_bottles_into_dustbin/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/put_bottles_into_dustbin/clip-04-overview.mp4", "poster": "videos/put_bottles_into_dustbin/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 14.833008, "views": {"all": {"file": "videos/put_bottles_into_dustbin/clip-05-all.mp4", "poster": "videos/put_bottles_into_dustbin/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/put_bottles_into_dustbin/clip-05-overview.mp4", "poster": "videos/put_bottles_into_dustbin/clip-05-overview.jpg", "width": 640, "height": 480}}}}}, {"id": "store_laptop_and_headphones", "name": "Store laptop & headphones", "clips": {"clip-01": {"duration": 25.6, "views": {"all": {"file": "videos/store_laptop_and_headphones/clip-01-all.mp4", "poster": "videos/store_laptop_and_headphones/clip-01-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/store_laptop_and_headphones/clip-01-overview.mp4", "poster": "videos/store_laptop_and_headphones/clip-01-overview.jpg", "width": 640, "height": 480}}}, "clip-02": {"duration": 25.266667, "views": {"all": {"file": "videos/store_laptop_and_headphones/clip-02-all.mp4", "poster": "videos/store_laptop_and_headphones/clip-02-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/store_laptop_and_headphones/clip-02-overview.mp4", "poster": "videos/store_laptop_and_headphones/clip-02-overview.jpg", "width": 640, "height": 480}}}, "clip-03": {"duration": 23.866016, "views": {"all": {"file": "videos/store_laptop_and_headphones/clip-03-all.mp4", "poster": "videos/store_laptop_and_headphones/clip-03-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/store_laptop_and_headphones/clip-03-overview.mp4", "poster": "videos/store_laptop_and_headphones/clip-03-overview.jpg", "width": 640, "height": 480}}}, "clip-04": {"duration": 26.066667, "views": {"all": {"file": "videos/store_laptop_and_headphones/clip-04-all.mp4", "poster": "videos/store_laptop_and_headphones/clip-04-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/store_laptop_and_headphones/clip-04-overview.mp4", "poster": "videos/store_laptop_and_headphones/clip-04-overview.jpg", "width": 640, "height": 480}}}, "clip-05": {"duration": 24.266016, "views": {"all": {"file": "videos/store_laptop_and_headphones/clip-05-all.mp4", "poster": "videos/store_laptop_and_headphones/clip-05-all.jpg", "width": 1920, "height": 480}, "overview": {"file": "videos/store_laptop_and_headphones/clip-05-overview.mp4", "poster": "videos/store_laptop_and_headphones/clip-05-overview.jpg", "width": 640, "height": 480}}}}}]</script>
+<script type="application/json" id="real-demo-data">[{"id": "倒水2", "name": "Pour water", "file": "real_demo/倒水2.mp4", "poster": "real_demo/倒水2.jpg", "duration": 12.5, "width": 1920, "height": 512}, {"id": "写字", "name": "Write", "file": "real_demo/写字.mp4", "poster": "real_demo/写字.jpg", "duration": 40.3, "width": 1920, "height": 512}, {"id": "叠方块", "name": "Stack blocks", "file": "real_demo/叠方块.mp4", "poster": "real_demo/叠方块.jpg", "duration": 30.9, "width": 1920, "height": 512}, {"id": "叠碗", "name": "Stack bowls", "file": "real_demo/叠碗.mp4", "poster": "real_demo/叠碗.jpg", "duration": 34.6, "width": 1920, "height": 512}, {"id": "放笔", "name": "Place pen", "file": "real_demo/放笔.mp4", "poster": "real_demo/放笔.jpg", "duration": 34.4, "width": 1920, "height": 512}]</script>
+<script>
+(() => {
+const library = document.getElementById('episode-library');
+if (!library) return;
+const tasks = JSON.parse(document.getElementById('video-data').textContent);
+const video = document.getElementById('episode-video');
+const stage = document.getElementById('episode-stage');
+const title = document.getElementById('episode-title');
+const duration = document.getElementById('episode-duration');
+const status = document.getElementById('episode-status');
+const error = document.getElementById('episode-error');
+const open = document.getElementById('episode-open');
+const select = document.getElementById('episode-select');
+const speed = document.getElementById('episode-speed');
+const cameraLabels = document.getElementById('episode-camera-labels');
+const taskButtons = [...library.querySelectorAll('[data-video-task]')];
+const clipButtons = [...library.querySelectorAll('[data-video-clip]')];
+const viewButtons = [...library.querySelectorAll('[data-video-view]')];
+let task = tasks[0];
+let clipId = Object.keys(task.clips)[0];
+let view = matchMedia('(max-width: 600px)').matches ? 'overview' : 'all';
+let expectedSource = '';
+let pendingTime = 0;
+
+function update(preserveTime = false, announce = true) {
+  pendingTime = preserveTime ? (video.readyState >= 1 ? video.currentTime : pendingTime) : 0;
+  video.pause();
+  const clip = task.clips[clipId];
+  const media = clip.views[view] || clip.views.all || clip.views.overview;
+  const source = library.dataset.mediaRoot + media.file;
+  expectedSource = new URL(source, document.baseURI).href;
+  error.hidden = true;
+  video.preload = pendingTime > 0 ? 'metadata' : 'none';
+  video.poster = library.dataset.mediaRoot + media.poster;
+  video.src = source;
+  video.width = media.width;
+  video.height = media.height;
+  video.defaultPlaybackRate = Number(speed.value);
+  video.load();
+  stage.dataset.view = view;
+  cameraLabels.hidden = view === 'overview';
+  title.textContent = task.name;
+  const seconds = Math.ceil(clip.duration);
+  duration.textContent = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  open.href = source;
+  select.value = task.id;
+  const description = `${task.name}, Clip ${clipId.slice(-2)}, ${view === 'all' ? 'all cameras' : 'overview'}`;
+  video.setAttribute('aria-label', description);
+  if (announce) status.textContent = description;
+  taskButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.videoTask === task.id)));
+  clipButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.videoClip === clipId)));
+  viewButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.videoView === view)));
+}
+
+function chooseTask(id) {
+  if (id === task.id) return;
+  task = tasks.find(t => t.id === id);
+  update();
+}
+taskButtons.forEach(b => b.addEventListener('click', () => chooseTask(b.dataset.videoTask)));
+select.addEventListener('change', () => chooseTask(select.value));
+clipButtons.forEach(b => b.addEventListener('click', () => {
+  if (clipId === b.dataset.videoClip) return;
+  clipId = b.dataset.videoClip;
+  update();
+}));
+viewButtons.forEach(b => b.addEventListener('click', () => {
+  if (view === b.dataset.videoView) return;
+  view = b.dataset.videoView;
+  update(true);
+}));
+speed.addEventListener('change', () => {
+  video.defaultPlaybackRate = Number(speed.value);
+  video.playbackRate = Number(speed.value);
+});
+video.addEventListener('loadedmetadata', () => {
+  if (video.currentSrc !== expectedSource || video.readyState < 1) return;
+  video.playbackRate = Number(speed.value);
+  if (pendingTime > 0) video.currentTime = Math.min(pendingTime, video.duration);
+  pendingTime = 0;
+});
+video.addEventListener('error', () => {
+  if (video.currentSrc === expectedSource && video.error) error.hidden = false;
+});
+new IntersectionObserver(e => { if (!e[0].isIntersecting) video.pause(); }).observe(stage);
+document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
+window.addEventListener('pagehide', () => video.pause());
+update(false, false);
+})();
+</script>
+<script>
+(() => {
+const root = document.getElementById('real-demo-library');
+if (!root) return;
+const demos = JSON.parse(document.getElementById('real-demo-data').textContent);
+const video = document.getElementById('real-demo-video');
+const stage = document.getElementById('real-demo-stage');
+const title = document.getElementById('real-demo-title');
+const duration = document.getElementById('real-demo-duration');
+const status = document.getElementById('real-demo-status');
+const error = document.getElementById('real-demo-error');
+const open = document.getElementById('real-demo-open');
+const select = document.getElementById('real-demo-select');
+const speed = document.getElementById('real-demo-speed');
+const buttons = [...root.querySelectorAll('[data-real-demo]')];
+let demo = demos[0];
+let expectedSource = '';
+
+function update(announce = true) {
+  video.pause();
+  const source = root.dataset.mediaRoot + demo.file;
+  expectedSource = new URL(source, document.baseURI).href;
+  error.hidden = true;
+  video.preload = 'none';
+  video.poster = root.dataset.mediaRoot + demo.poster;
+  video.src = source;
+  video.width = demo.width;
+  video.height = demo.height;
+  video.defaultPlaybackRate = Number(speed.value);
+  video.load();
+  title.textContent = demo.name;
+  const seconds = Math.ceil(demo.duration);
+  duration.textContent = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+  open.href = source;
+  select.value = demo.id;
+  const description = `${demo.name}, real-robot demonstration`;
+  video.setAttribute('aria-label', description);
+  if (announce) status.textContent = description;
+  buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.realDemo === demo.id)));
+}
+
+function choose(id) {
+  if (id === demo.id) return;
+  demo = demos.find(d => d.id === id);
+  if (demo) update();
+}
+buttons.forEach(b => b.addEventListener('click', () => choose(b.dataset.realDemo)));
+select.addEventListener('change', () => choose(select.value));
+speed.addEventListener('change', () => {
+  video.defaultPlaybackRate = Number(speed.value);
+  video.playbackRate = Number(speed.value);
+});
+video.addEventListener('loadedmetadata', () => {
+  if (video.currentSrc !== expectedSource || video.readyState < 1) return;
+  video.playbackRate = Number(speed.value);
+});
+video.addEventListener('error', () => {
+  if (video.currentSrc === expectedSource && video.error) error.hidden = false;
+});
+new IntersectionObserver(e => { if (!e[0].isIntersecting) video.pause(); }).observe(stage);
+document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
+window.addEventListener('pagehide', () => video.pause());
+update(false);
+})();
+</script>
+</body>
+</html>
+
